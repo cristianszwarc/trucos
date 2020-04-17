@@ -11,7 +11,7 @@ const trucos = require('trucos');
 
 const resolvers = {
   sayHi: (params) => {
-    return `Hi ${params.who}!`;
+    return { greeting: `Hi ${params.who}!`};
   },
 };
 
