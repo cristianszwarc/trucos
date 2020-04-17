@@ -1,7 +1,7 @@
 {
   "name": "trucos",
   "title": "Trucos",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "Handy user interface for your day to day debugging queries and commands.",
   "main": "index.js",
   "scripts": {
