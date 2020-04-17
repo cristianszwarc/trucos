@@ -50,7 +50,7 @@ const setupEndpoint = (expressApp, path, tool, resolvers) => {
       }, {});
 
       console.log(`executing resolver ${query.resolver} with:`, paramsAndValues);
-      let rows = await resolvers[query.resolver](paramsAndValues);
+      let rows = await resolvers[query.resolver](paramsAndValues, query);
       // console.log(`result:`, JSON.stringify(rows));
 
       return rows;
