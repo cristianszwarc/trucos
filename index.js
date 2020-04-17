@@ -3,9 +3,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const md5 = require('md5');
+const path = require('path');
 const _ = require('lodash');
 const open = require('open');
+const setupTools = require('./setupTools');
 
 module.exports = {
   run: (params) => {
@@ -38,21 +39,49 @@ module.exports = {
     const tools = params.tools;
     const resolvers = params.resolvers;
 
+    const html = `<!DOCTYPE html>
+                    <html>
+                        <head>
+                            <title>Trucos</title>
+                            <meta charset="utf-8">
+                            <meta name="viewport" content="width=device-width">
+                            <link href="${baseUrlPath}/app.css" rel="stylesheet">
+                        </head>
+                        <body>
+                            <div id="app"></div>
+                            <script type="text/javascript" src="${baseUrlPath}/ui.bundle.js"></script>
+                        </body>
+                    </html>`;
+
     const app = express();
     app.use(bodyParser.urlencoded({ extended: false }));
     app.use(bodyParser.json());
     app.use(cors());
 
-    app.get(`${baseUrlPath}/`, (req, res) => {
-      res.status(200).send(`Trucos is running: ${baseUrl}`);
+    // try static files first
+    app.use(`${baseUrlPath}/`, express.static(path.join(__dirname, '/ui-dist')));
+
+    // next allow commands from the UI
+    setupTools(app, `${baseUrlPath}/`, tools, resolvers);
+
+    // expose the tools definition
+    app.get(`${baseUrlPath}/tools`, (req, res) => {
+      res.status(200).json(tools);
+    });
+
+    // catch all for single page app
+    app.get(`${baseUrlPath}/*`, (req, res) => {
+      res.status(200).send(html);
     });
 
     app.listen(port);
     console.log(`Trucos is running: ${baseUrl}`);
 
-    (async () => {
-      await open(`${baseUrl}${baseUrlPath}/`);
-    })();
+    if (!params.noAutoBrowser) {
+      (async () => {
+        await open(`${baseUrl}${baseUrlPath}/`);
+      })();
+    }
 
   },
 };

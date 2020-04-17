@@ -1,17 +1,8 @@
-# Trucos
-
-### WIP!
-
--------------------------------
-`npm install trucos --save-dev`
-
-index.js
-```js
 const trucos = require('trucos');
 
 const resolvers = {
   sayHi: (params) => {
-    return `Hi ${params.who}!`;
+    return { greeting: `Hi ${params.who}!`};
   },
 };
 
@@ -42,10 +33,3 @@ trucos.run({
   tools: tools,
   resolvers: resolvers,
 });
-```
-
-`node index.js`
-
-**Screenshot**
-
-![List](screens/example.png)
