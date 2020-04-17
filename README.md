@@ -48,4 +48,4 @@ trucos.run({
 
 **Screenshot**
 
-![List](screens/example.png)
+![Example](screens/example.png)
