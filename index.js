@@ -84,4 +84,6 @@ module.exports = {
     }
 
   },
+  md5: require('md5'),
+  dotenv: require('dotenv'),
 };
