@@ -1,0 +1,29 @@
+[
+  {
+    "endpoint": "search-accounts",
+    "label": "Catalog Search",
+    "fields": [
+      {
+        "type": "string",
+        "name": "search",
+        "label": "Search"
+      }
+    ],
+    "queries": [
+      {
+        "label": "Animals",
+        "resolver": "dbQuery",
+        "params": ["%search%"],
+        "display": "table",
+        "SQL": "SELECT id, name, type FROM animals WHERE name like $1"
+      },
+      {
+        "label": "Plants",
+        "resolver": "dbQuery",
+        "params": ["%search%"],
+        "display": "table",
+        "SQL": "SELECT id, name, type FROM plants WHERE name like $1"
+      }
+    ]
+  }
+]
