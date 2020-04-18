@@ -8,7 +8,7 @@ const setupTools = (expressApp, toolBasePath, toolsToSetup, resolvers) => {
 
     // assign ids to all queries
     tool.queries.forEach((query) => {
-      query.id = md5(query.query || query.resolver);
+      query.id = md5(JSON.stringify([tool.endpoint, query.resolver ]));
     });
 
     // expose an endpoint to allow the execution of this tool
