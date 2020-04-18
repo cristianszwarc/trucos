@@ -36,21 +36,25 @@ const setupEndpoint = (expressApp, path, tool, resolvers) => {
       }
 
       // get values from the POST body and create an object according to the expectations of the current query
-      const paramsAndValues = query.params.reduce((prev, next) => {
+      // also generate an array with the values in the same order specified in the current query
+      const paramsAndValues = {};
+      const sortedParams = [];
+      query.params.forEach(expectedParameter => {
         // mind that the field can have a name of "search" but the parameter accepted by the query can wrap it in wildcards
-        const formFieldName = next.replace(new RegExp('%', 'g'), '');
+        const formFieldName = expectedParameter.replace(new RegExp('%', 'g'), '');
         const valueFromBody = req.body[formFieldName];
 
         // if the query parameter is expecting wildcards, add them wrapping the value
-        const startWildcard = next.startsWith('%') ? '%' : '';
-        const endWildcard = next.endsWith('%') ? '%' : '';
-        prev[next] = `${startWildcard}${valueFromBody}${endWildcard}`;
+        const startWildcard = expectedParameter.startsWith('%') ? '%' : '';
+        const endWildcard = expectedParameter.endsWith('%') ? '%' : '';
+        const wrappedValue = `${startWildcard}${valueFromBody}${endWildcard}`;
 
-        return prev;
-      }, {});
+        paramsAndValues[formFieldName] = wrappedValue;
+        sortedParams.push(wrappedValue);
+      });
 
-      console.log(`executing resolver ${query.resolver} with:`, paramsAndValues);
-      let rows = await resolvers[query.resolver](paramsAndValues, query);
+      console.log(`executing resolver ${query.resolver} with:`, paramsAndValues, sortedParams);
+      let rows = await resolvers[query.resolver](paramsAndValues, sortedParams, query);
       // console.log(`result:`, JSON.stringify(rows));
 
       return rows;
